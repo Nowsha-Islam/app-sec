@@ -63,9 +63,9 @@ START_TEST(test_check_single_word_overflow)
 {
     hashmap_t hashtable[HASH_SIZE];
     load_dictionary("test2.txt", hashtable);
-    int word1_hash = hash_function("Thequickbrownfoxjumpsoverthelazydog.");
+    int word1_hash = hash_function("Thequickbrownfoxjumpsoverthelazydogthisisasentencethatusesallthelettersinthealphabetatleastonce.");
     char *word1 = hashtable[word1_hash];
-    ck_assert(strcmp(word1, "Thequickbrownfoxjumpsoverthelazydog.") == 0);
+    ck_assert(strcmp(word1, "Thequickbrownfoxjumpsoverthelazydogthisisasentencethatusesallthelettersinthealphabetatleastonce.") == 0);
     ck_assert(LENGTH == strlen(word1));
 }
 END_TEST
