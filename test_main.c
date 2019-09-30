@@ -59,6 +59,17 @@ START_TEST(test_check_word_buffer_overflow) {
     ck_assert(!check_word(incorrect_word, hashtable));
 } END_TEST
 
+START_TEST(test_check_single_word_overflow)
+{
+    hashmap_t hashtable[HASH_SIZE];
+    load_dictionary("test2.txt", hashtable);
+    int word1_hash = hash_function("Thequickbrownfoxjumpsoverthelazydog.");
+    char *word1 = hashtable[word1_hash];
+    ck_assert(strcmp(word1, "Thequickbrownfoxjumpsoverthelazydog.") == 0);
+    ck_assert(LENGTH == strlen(word1));
+}
+END_TEST
+
 Suite *
 check_word_suite(void)
 {
