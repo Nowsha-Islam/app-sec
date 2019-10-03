@@ -79,6 +79,7 @@ START_TEST(test_check_numbers)
     int num_misspelled = check_words(fp, hashtable, misspelled);
     ck_assert(num_misspelled == 0);
 }
+END_TEST
 
 Suite *
 check_word_suite(void)
