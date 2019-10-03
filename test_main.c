@@ -52,10 +52,10 @@ END_TEST
 START_TEST(test_check_word_buffer_overflow) {
     hashmap_t hashtable[HASH_SIZE];
     load_dictionary(DICTIONARY, hashtable);
-    char incorrect_word[500000];
-    for(int i = 0; i < 499999; i++)
+    char incorrect_word[250000];
+    for(int i = 0; i < 249999; i++)
         incorrect_word[i] = 'A';
-    incorrect_word[499999] = 0;
+    incorrect_word[249999] = 0;
     ck_assert(!check_word(incorrect_word, hashtable));
 } END_TEST
 
@@ -69,6 +69,16 @@ START_TEST(test_check_single_word_overflow)
     ck_assert(LENGTH == strlen(word1));
 }
 END_TEST
+
+START_TEST(test_check_numbers)
+{
+    hashmap_t hashtable[HASH_SIZE];
+    load_dictionary(DICTIONARY, hashtable);
+    char *misspelled[MAX_MISSPELLED];
+    FILE *fp = fopen("test3.txt", "r");
+    int num_misspelled = check_words(fp, hashtable, misspelled);
+    ck_assert(num_misspelled == 0);
+}
 
 Suite *
 check_word_suite(void)

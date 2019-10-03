@@ -5,10 +5,28 @@
 #include <ctype.h>
 #include "dictionary.h"
 
+char *remPunct(char *str) {
+    if (str == NULL){
+        return NULL;
+    }
+    char *x = str;
+    char *y = str + strlen(str) - 1;
+    while (ispunct(*x)) {
+    	x++;
+    }
+    while (ispunct(*y) && x < y) { 
+    	*y = 0; 
+    	y--; 
+    }
+    if (strlen(x) == 0){
+        return NULL;
+    }
+    return x;
+}
+
 char *toLower(char *str) {
     char *ptr1 = str;
     char *ptr2 = str;
-
     if(str != NULL) {
         if(strlen(str) != 0) {
             while(*ptr1) {
@@ -23,29 +41,6 @@ char *toLower(char *str) {
     return "";
 }
 
-char *remPunct(char *str) {
-    if (str == NULL){
-        return NULL;
-    }
-    char *p = str;
-    char *t = str + strlen(str) - 1;
-    while (ispunct(*p)) {
-    	p++;
-    }
-    while (ispunct(*t) && p < t) { 
-    	*t = 0; t--; 
-    }
-    { int i;
-        for (i = 0; i <= t - p + 1; i++) {
-            str[i] = p[i];
-        }
-        p = str;
-    } /* --- */
-    if (strlen(p) == 0){
-        return NULL;
-    }
-    return p;
-}
 
 bool check_word(const char* word, hashmap_t hashtable[]){
 	int index = hash_function(word);      
@@ -62,39 +57,43 @@ bool check_word(const char* word, hashmap_t hashtable[]){
 };
 
 int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]){
- 	char *pos = 0;                 
-    char *pch;
+ 	char *x = 0;                 
+    char *y;
     int num_misspelled = 0;
-    char string[80];
+    char string[100];
 
-    while (fgets(string, 80, fp) != NULL) {
+     if (fp == NULL){
+        exit(5);
+    }
+
+    while (fgets(string, 100, fp) != NULL) {
 		// get rid of newline and set it null
-        if ((pos = strchr(string, '\n')) != NULL) {
-            *pos = '\0';
+        if ((x = strchr(string, '\n')) != NULL) {
+            *x = '\0';
         }
 
-        pch = strtok(string," ");
-        if (pch != NULL && strlen(pch) > LENGTH) {
-            pch = NULL;
+        y = strtok(string," ");
+        if (y != NULL && strlen(y) > LENGTH) {
+            y = NULL;  
         }
-        pch = remPunct(pch);
+        y = remPunct(y);
 
-        while (pch != NULL) {
-            if (check_word(pch, hashtable)) {
-                pch = strtok(NULL, " ");
-                pch = remPunct(pch);
+        while (y != NULL) {
+            if (check_word(y, hashtable)) {
+                y = strtok(NULL, " ");
+                y = remPunct(y);
             }
-            else if (check_word(toLower(pch), hashtable)) {
-                pch = strtok(NULL, " ");
-                pch = remPunct(pch);
+            else if (check_word(toLower(y), hashtable)) {
+                y = strtok(NULL, " ");
+                y = remPunct(y);
             }
             else {
                 if (num_misspelled < MAX_MISSPELLED){
                     misspelled[num_misspelled] = (char *)malloc((LENGTH+1)*sizeof(char));
-                    strncpy(misspelled[num_misspelled],pch,(LENGTH+1));
+                    strncpy(misspelled[num_misspelled],y,(LENGTH+1));
                     num_misspelled++;
-                    pch = strtok(NULL, " ");
-                    pch = remPunct(pch);
+                    y = strtok(NULL, " ");
+                    y = remPunct(y);
                 } else {
                     return num_misspelled;
                 }
