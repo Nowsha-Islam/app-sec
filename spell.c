@@ -60,13 +60,13 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]){
  	char *x = 0;                 
     char *y;
     int num_misspelled = 0;
-    char string[100];
+    char string[85];
 
      if (fp == NULL){
         exit(5);
     }
 
-    while (fgets(string, 100, fp) != NULL) {
+    while (fgets(string, 85, fp) != NULL) {
 		// get rid of newline and set it null
         if ((x = strchr(string, '\n')) != NULL) {
             *x = '\0';
@@ -144,3 +144,4 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]){
     	return 0;
     }
 };
+
